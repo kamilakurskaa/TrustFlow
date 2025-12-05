@@ -1,13 +1,24 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database.database import engine
-from .models import user, credit
+from .database.database import Base, engine
 from .routes import auth, users, credit
+import logging
 
-user.Base.metadata.create_all(bind=engine)
-credit.Base.metadata.create_all(bind=engine)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-app = FastAPI(title="TrustFlow", version="1.0.0")
+try:
+    Base.metadata.create_all(bind=engine)
+    logger.info("Таблицы базы данных созданы успешно")
+except Exception as e:
+    logger.error(f"Ошибка при создании таблиц: {e}")
+
+app = FastAPI(
+    title="TrustFlow",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
 # CORS middleware
 app.add_middleware(
