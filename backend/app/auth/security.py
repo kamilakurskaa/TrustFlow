@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
+from jwt import decode, encode
+from jwt.exceptions import PyJWTError
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer
@@ -32,7 +33,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
@@ -43,11 +44,11 @@ def get_current_user(token: str = Depends(security), db: Session = Depends(get_d
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = decode(token.credentials, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: int = payload.get("sub")
         if user_id is None:
             raise credentials_exception
-    except JWTError:
+    except PyJWTError:
         raise credentials_exception
 
     user = db.query(User).filter(User.id == user_id).first()
