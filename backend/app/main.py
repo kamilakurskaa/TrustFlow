@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database.database import Base, engine
+from .database import database
 from .routes import auth, users, credit
 import logging
 
@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 try:
-    Base.metadata.create_all(bind=engine)
+    database.Base.metadata.create_all(bind=database.engine)
     logger.info("Таблицы базы данных созданы успешно")
 except Exception as e:
     logger.error(f"Ошибка при создании таблиц: {e}")
