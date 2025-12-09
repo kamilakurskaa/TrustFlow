@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 from typing import Optional
 
@@ -8,7 +8,8 @@ class UserBase(BaseModel):
     phone: Optional[str] = None
 
 class UserCreate(UserBase):
-    password: str
+    password: str = Field(..., min_length=8)
+    wallet_address: Optional[str] = None
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -18,6 +19,8 @@ class UserResponse(UserBase):
     id: int
     is_active: bool
     is_verified: bool
+    reputation_score: float
+    wallet_address: Optional[str]
     created_at: datetime
 
     class Config:

@@ -1,17 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database import database
-from .routes import auth, users, credit
 import logging
+from sqlalchemy import text
+
+from .database import engine
+from .routes.auth import router as auth_router
+from .routes.credit import router as credit_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-try:
-    database.Base.metadata.create_all(bind=database.engine)
-    logger.info("Таблицы базы данных созданы успешно")
-except Exception as e:
-    logger.error(f"Ошибка при создании таблиц: {e}")
 
 app = FastAPI(
     title="TrustFlow",
@@ -23,16 +20,14 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React app
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Подключаем роуты
-app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
-app.include_router(users.router, prefix="/api/users", tags=["users"])
-app.include_router(credit.router, prefix="/api/credit", tags=["credit"])
+app.include_router(auth_router, prefix="/api/auth", tags=["Аутентификация"])
+app.include_router(credit_router, prefix="/api/credit", tags=["Кредитный скоринг"])
 
 @app.get("/")
 async def root():
@@ -40,4 +35,58 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    try:
+        with engine.connect() as conn:
+            # Проверяем существование таблицы users
+            result = conn.execute(
+                text("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'users');")
+            ).scalar()
+
+            if result:
+                # Пробуем получить количество пользователей
+                count = conn.execute(text("SELECT COUNT(*) FROM users;")).scalar()
+                return {
+                    "status": "healthy",
+                    "database": "connected",
+                    "users_table": "exists",
+                    "users_count": count
+                }
+            else:
+                return {
+                    "status": "unhealthy",
+                    "database": "connected",
+                    "users_table": "missing",
+                    "message": "Таблица users не найдена. Создайте таблицы через SQL скрипт."
+                }
+
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "error": str(e),
+            "message": "Ошибка подключения к базе данных"
+        }
+
+
+@app.get("/tables")
+async def get_tables():
+    """Получение списка всех таблиц"""
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(
+                text("""
+                    SELECT table_name 
+                    FROM information_schema.tables 
+                    WHERE table_schema = 'public'
+                    ORDER BY table_name;
+                """)
+            ).fetchall()
+
+            tables = [row[0] for row in result]
+            return {"tables": tables, "count": len(tables)}
+
+    except Exception as e:
+        return {"error": str(e)}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
