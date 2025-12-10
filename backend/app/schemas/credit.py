@@ -2,7 +2,30 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional, Dict, Any
 
-class CreditScoreRequest(BaseModel):
+class CreditMethodRequest(BaseModel):
+    method: str  # 'parsing' или 'upload'
+    has_credit_history: Optional[bool] = None
+    consent_data_processing: bool = True
+
+class ParsingResult(BaseModel):
+    success: bool
+    data: Dict[str, Any]
+    message: Optional[str] = None
+
+class MLScoreRequest(BaseModel):
+    user_id: int
+    source: str  # 'parsing' или 'document'
+    data: Dict[str, Any]
+    document_id: Optional[int] = None
+
+class MLScoreResponse(BaseModel):
+    score: int
+    score_category: str
+    reputation_score: float
+    factors: Dict[str, Any]
+    confidence: float
+
+class CreditScoreRequest(BaseModel): #старые схемы
     use_blockchain: bool = True
     data_sources: Dict[str, bool] = {"manual": True} # {"bank_data": True, "bki": True, etc}
 

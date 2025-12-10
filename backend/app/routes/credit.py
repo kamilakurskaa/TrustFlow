@@ -4,6 +4,7 @@ from ..database import get_db
 from ..models.user import User
 from ..models.blockchain import BlockchainRecord
 from ..models.credit import CreditReport, ParserJob
+
 from ..schemas.credit import CreditScoreRequest, CreditScoreResponse, CreditRequestResponse
 from ..auth.security import get_current_user
 from ..config import settings

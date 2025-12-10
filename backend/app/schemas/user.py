@@ -11,6 +11,9 @@ class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
     wallet_address: Optional[str] = None
 
+    has_credit_history: Optional[bool] = None  # Новое поле
+    consent_data_processing: bool = Field(default=False)  # Новое поле
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
@@ -21,6 +24,30 @@ class UserResponse(UserBase):
     is_verified: bool
     reputation_score: float
     wallet_address: Optional[str]
+
+    has_credit_history: Optional[bool]  # Новое поле
+    blockchain_user_id: Optional[str]  # Новое поле
+
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Новые схемы
+class CreditHistoryChoice(BaseModel):
+    has_credit_history: bool
+    consent_data_processing: bool = True
+
+
+class DocumentUpload(BaseModel):
+    document_type: str = "gosuslugi"
+
+
+class UploadedDocumentResponse(BaseModel):
+    id: int
+    filename: str
+    document_type: str
+    is_verified: bool
     created_at: datetime
 
     class Config:
