@@ -3,143 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrustFlow - Управление кредитными историями</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>TrustFlow - РђРЅР°Р»РёР· РєСЂРµРґРёС‚РЅРѕР№ РёСЃС‚РѕСЂРёРё</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    
+    <!-- Р”Р»СЏ СЂР°Р·РЅС‹С… СЂР°Р·РјРµСЂРѕРІ -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
+    
+    <!-- Р”Р»СЏ Apple СѓСЃС‚СЂРѕР№СЃС‚РІ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    
+    <!-- Р”Р»СЏ Windows 8/10 -->
+    <meta name="msapplication-TileColor" content="#4361ee">
+    <meta name="msapplication-TileImage" content="assets/icons/ms-icon-144x144.png">
+    
+    <!-- Р¦РІРµС‚ С‚РµРјС‹ Р±СЂР°СѓР·РµСЂР° -->
+    <meta name="theme-color" content="#4361ee">
+    
+    <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Навигация -->
-    <nav class="navbar">
-        <div class="container">
+    <div class="container">
+        <!-- РќР°РІРёРіР°С†РёСЏ -->
+        <nav class="navbar">
             <div class="logo">
                 <i class="fas fa-shield-alt"></i>
                 <span>TrustFlow</span>
             </div>
-            <ul class="nav-links">
-                <li><a href="#features">Возможности</a></li>
-                <li><a href="#how-it-works">Как это работает</a></li>
-                <li><a href="#about">О нас</a></li>
-                <li><a href="login.html" class="btn-login">Войти</a></li>
-                <li><a href="register.html" class="btn-register">Регистрация</a></li>
-            </ul>
-            <button class="menu-toggle">
-                <i class="fas fa-bars"></i>
+            <button class="btn btn-outline" onclick="location.href='auth.html'">
+                <i class="fas fa-sign-in-alt"></i> Р’РѕР№С‚Рё
             </button>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- Герой-секция -->
-    <section class="hero">
-        <div class="container">
+        <!-- Р“РµСЂРѕР№-СЃРµРєС†РёСЏ -->
+        <main class="hero">
             <div class="hero-content">
-                <h1>Надежная платформа для управления кредитными историями</h1>
-                <p>Безопасное хранение, прозрачные транзакции и полный контроль над вашими финансовыми данными</p>
-                <div class="hero-buttons">
-                    <a href="register.html" class="btn-primary">Начать бесплатно</a>
-                    <a href="#features" class="btn-secondary">Узнать больше</a>
+                <h1>РЈРјРЅС‹Р№ Р°РЅР°Р»РёР· РєСЂРµРґРёС‚РЅРѕР№ РёСЃС‚РѕСЂРёРё</h1>
+                <p class="subtitle">
+                    РџРѕР»СѓС‡РёС‚Рµ С‚РѕС‡РЅСѓСЋ РѕС†РµРЅРєСѓ РІР°С€РµР№ РєСЂРµРґРёС‚РѕСЃРїРѕСЃРѕР±РЅРѕСЃС‚Рё СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј 
+                    Р±Р»РѕРєС‡РµР№РЅ-С‚РµС…РЅРѕР»РѕРіРёР№ Рё РёСЃРєСѓСЃСЃС‚РІРµРЅРЅРѕРіРѕ РёРЅС‚РµР»Р»РµРєС‚Р°
+                </p>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-lock"></i>
+                        <h3>Р‘РµР·РѕРїР°СЃРЅРѕ</h3>
+                        <p>Р”Р°РЅРЅС‹Рµ Р·Р°С‰РёС‰РµРЅС‹ Р±Р»РѕРєС‡РµР№РЅРѕРј</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-bolt"></i>
+                        <h3>Р‘С‹СЃС‚СЂРѕ</h3>
+                        <p>РђРЅР°Р»РёР· Р·Р° 2 РјРёРЅСѓС‚С‹</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>РўРѕС‡РЅРѕ</h3>
+                        <p>РўРѕС‡РЅРѕСЃС‚СЊ РѕС†РµРЅРєРё 97%</p>
+                    </div>
                 </div>
+                <button class="btn btn-primary btn-large" onclick="location.href='auth.html'">
+                    РќР°С‡Р°С‚СЊ Р°РЅР°Р»РёР· <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
             <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Финансовая безопасность">
-            </div>
-        </div>
-    </section>
-
-    <!-- Возможности -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2>Наши возможности</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-lock"></i>
+                <div class="card-animation">
+                    <div class="card card-1">
+                        <i class="fas fa-credit-card"></i>
+                        <span>РљСЂРµРґРёС‚РЅС‹Р№ СЂРµР№С‚РёРЅРі</span>
                     </div>
-                    <h3>Безопасное хранение</h3>
-                    <p>Ваши данные защищены с помощью блокчейн-технологий и шифрования</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
+                    <div class="card card-2">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>РђРЅР°Р»РёР· РёСЃС‚РѕСЂРёРё</span>
                     </div>
-                    <h3>Аналитика</h3>
-                    <p>Детальная аналитика вашей кредитной истории и рекомендации</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-exchange-alt"></i>
+                    <div class="card card-3">
+                        <i class="fas fa-shield-check"></i>
+                        <span>Р—Р°С‰РёС‚Р° РґР°РЅРЅС‹С…</span>
                     </div>
-                    <h3>Быстрые транзакции</h3>
-                    <p>Мгновенные и безопасные финансовые операции</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-eye"></i>
-                    </div>
-                    <h3>Прозрачность</h3>
-                    <p>Полная видимость всех операций и изменений</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </main>
 
-    <!-- Как это работает -->
-    <section id="how-it-works" class="how-it-works">
-        <div class="container">
-            <h2>Как это работает</h2>
+        <!-- РРЅС„РѕСЂРјР°С†РёСЏ Рѕ С‚РµС…РЅРѕР»РѕРіРёРё -->
+        <section class="tech-section">
+            <h2>РљР°Рє СЌС‚Рѕ СЂР°Р±РѕС‚Р°РµС‚?</h2>
             <div class="steps">
                 <div class="step">
                     <div class="step-number">1</div>
-                    <h3>Регистрация</h3>
-                    <p>Создайте аккаунт и подтвердите личность</p>
+                    <h3>Р РµРіРёСЃС‚СЂР°С†РёСЏ</h3>
+                    <p>РЎРѕР·РґР°Р№С‚Рµ Р°РєРєР°СѓРЅС‚ Р·Р° 30 СЃРµРєСѓРЅРґ</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
-                    <h3>Добавление данных</h3>
-                    <p>Загрузите свою кредитную историю</p>
+                    <h3>РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ</h3>
+                    <p>Р”Р°Р№С‚Рµ СЃРѕРіР»Р°СЃРёРµ РЅР° Р°РЅР°Р»РёР· РґР°РЅРЅС‹С…</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h3>Анализ</h3>
-                    <p>Получите детальный анализ ваших данных</p>
+                    <h3>РђРЅР°Р»РёР·</h3>
+                    <p>РЎРёСЃС‚РµРјР° Р°РЅР°Р»РёР·РёСЂСѓРµС‚ РІР°С€Сѓ РєСЂРµРґРёС‚РЅСѓСЋ РёСЃС‚РѕСЂРёСЋ</p>
                 </div>
                 <div class="step">
                     <div class="step-number">4</div>
-                    <h3>Управление</h3>
-                    <p>Контролируйте доступ к вашей информации</p>
+                    <h3>Р РµР·СѓР»СЊС‚Р°С‚</h3>
+                    <p>РџРѕР»СѓС‡РёС‚Рµ РѕС†РµРЅРєСѓ РєСЂРµРґРёС‚РѕСЃРїРѕСЃРѕР±РЅРѕСЃС‚Рё</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Футер -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>TrustFlow</h3>
-                    <p>Платформа для безопасного управления кредитными историями</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Контакты</h4>
-                    <p>Email: info@trustflow.ru</p>
-                    <p>Телефон: +7 (999) 123-45-67</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Быстрые ссылки</h4>
-                    <ul>
-                        <li><a href="#features">Возможности</a></li>
-                        <li><a href="#how-it-works">Как это работает</a></li>
-                        <li><a href="#about">О нас</a></li>
-                        <li><a href="login.html">Войти</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 TrustFlow. Все права защищены.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="js/main.js"></script>
+        <footer>
+            <p>В© 2024 TrustFlow. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+            <p>РСЃРїРѕР»СЊР·СѓСЏ СЃРµСЂРІРёСЃ, РІС‹ СЃРѕРіР»Р°С€Р°РµС‚РµСЃСЊ СЃ СѓСЃР»РѕРІРёСЏРјРё РѕР±СЂР°Р±РѕС‚РєРё РґР°РЅРЅС‹С…</p>
+        </footer>
+    </div>
+    <script src="scripts/main.js"></script>
 </body>
 </html>
