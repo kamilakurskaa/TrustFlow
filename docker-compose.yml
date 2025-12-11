@@ -1,27 +1,45 @@
-version: '3.8'
+version: '3.8'  # Можно добавить обратно, это не критично
 
 services:
-  backend:
-    build: .
-    ports:
-      - "8000:8000"
+  # Блокчейн
+  ganache:
+    image: trufflesuite/ganache:latest
+    ports: ["8545:8545"]
     environment:
-      - DATABASE_URL=sqlite:///./trustflow.db
-    volumes:
-      - ./backend:/app
-      - ./trustflow.db:/app/trustflow.db
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      - GANACHE_OPTIONS=--deterministic --accounts 10 --mnemonic "test test test test test test test test test test test junk"
     restart: unless-stopped
 
+  # База данных
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=trustflow
+      - POSTGRES_USER=trustflow_user
+      - POSTGRES_PASSWORD=trustflow_pass
+    ports: ["5432:5432"]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Бэкенд
+  backend:
+    build: ./backend
+    ports: ["8001:8000"]
+    environment:
+      - DATABASE_URL=postgresql://trustflow_user:trustflow_pass@postgres:5432/trustflow 
+      - BLOCKCHAIN_URL=http://ganache:8545
+      - SECRET_KEY=super-puper-mega-ultra-secret-key
+    depends_on:
+      - postgres
+      - ganache
+    restart: unless-stopped
+
+  # Фронтенд
   frontend:
     build: ./frontend
-    ports:
-      - "8080:80"
+    ports: ["3000:80"]
     depends_on:
-      backend:
-        condition: service_healthy
-    volumes:
-      - ./frontend:/usr/share/nginx/html
+      - backend
     restart: unless-stopped
 
 volumes:

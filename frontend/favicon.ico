@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Синий фон -->
+  <rect width="64" height="64" fill="#4361ee" rx="12"/>
+  
+  <!-- Буква T (TrustFlow) -->
+  <text x="32" y="42" font-family="Arial, sans-serif" font-size="32" 
+        font-weight="bold" fill="white" text-anchor="middle">T</text>
+  
+  <!-- Волна/поток снизу -->
+  <path d="M12 52C20 48 28 46 32 46C36 46 44 48 52 52" 
+        stroke="white" stroke-width="2" fill="none"/>
+</svg>
