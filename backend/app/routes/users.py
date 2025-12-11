@@ -4,6 +4,7 @@ from ..database import get_db
 from ..models.user import User, UserProfile
 from ..schemas.user import UserResponse, ProfileBase, ProfileResponse
 from ..auth.security import get_current_user
+from ..services.blockchain_service import BlockchainService
 
 router = APIRouter()
 
@@ -12,6 +13,23 @@ router = APIRouter()
 def get_current_user_info(current_user: User = Depends(get_current_user)):
     return current_user
 
+
+@router.get("/me/with-rating")
+def get_user_with_rating(
+        current_user: User = Depends(get_current_user),
+        db: Session = Depends(get_db)
+):
+    """Получение данных пользователя с рейтингом из блокчейна"""
+
+    blockchain_service = BlockchainService()
+    blockchain_rating = blockchain_service.get_user_rating(current_user.id)
+
+    return {
+        "user": current_user,
+        "blockchain_rating": blockchain_rating,
+        "profile_complete": bool(current_user.full_name and current_user.phone),
+        "has_wallet": bool(current_user.wallet_address)
+    }
 
 @router.get("/profile", response_model=ProfileResponse)
 def get_user_profile(

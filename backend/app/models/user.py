@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float
 from sqlalchemy.sql import func
+from sqlalchemy.dialects.postgresql import JSON
 from ..database import Base
 
 class User(Base):
