@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustFlow - Анализ кредитной истории</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    
+    <!-- Для разных размеров -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
+    
+    <!-- Для Apple устройств -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    
+    <!-- Для Windows 8/10 -->
+    <meta name="msapplication-TileColor" content="#4361ee">
+    <meta name="msapplication-TileImage" content="assets/icons/ms-icon-144x144.png">
+    
+    <!-- Цвет темы браузера -->
+    <meta name="theme-color" content="#4361ee">
+    
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>TrustFlow</span>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-outline" onclick="location.href='index.html'">
+                    <i class="fas fa-home"></i> Главная
+                </button>
+                <button class="btn btn-outline" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </button>
+            </div>
+        </nav>
+
+        <main class="result-container">
+            <div class="result-header">
+                <h1><i class="fas fa-chart-line"></i> Результат анализа кредитной истории</h1>
+                <p>Обновлено: <span id="updateDate">Сегодня</span></p>
+            </div>
+
+            <div class="result-content">
+                <!-- Основной результат -->
+                <div class="score-card">
+                    <div class="score-circle">
+                        <div class="circle-background"></div>
+                        <div class="circle-progress"></div>
+                        <div class="score-value" id="mainScore">0</div>
+                    </div>
+                    <div class="score-info">
+                        <h2>Ваш кредитный рейтинг</h2>
+                        <p class="score-description" id="scoreDescription">Загрузка...</p>
+                        <div class="score-range">
+                            <span>Низкий риск</span>
+                            <span>Высокий риск</span>
+                        </div>
+                        <div class="score-bar">
+                            <div class="bar-fill" id="scoreBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Детали анализа -->
+                <div class="details-grid">
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>Срок истории</h3>
+                        <p class="detail-value" id="historyLength">- лет</p>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <h3>Долг/Доход</h3>
+                        <p class="detail-value" id="debtIncomeRatio">- %</p>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3>Платежи вовремя</h3>
+                        <p class="detail-value" id="onTimePayments">- %</p>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <h3>Активные кредиты</h3>
+                        <p class="detail-value" id="activeCredits">-</p>
+                    </div>
+                </div>
+
+                <!-- Рекомендации -->
+                <div class="recommendations">
+                    <h3><i class="fas fa-lightbulb"></i> Рекомендации</h3>
+                    <div class="recommendations-list" id="recommendationsList">
+                        <!-- Рекомендации будут добавлены через JS -->
+                    </div>
+                </div>
+
+                <!-- Блокчейн информация -->
+                <div class="blockchain-info">
+                    <h3><i class="fas fa-link"></i> Информация о записи в блокчейне</h3>
+                    <div class="blockchain-data">
+                        <div class="blockchain-item">
+                            <span>Хэш транзакции:</span>
+                            <code id="transactionHash">0x000...000</code>
+                        </div>
+                        <div class="blockchain-item">
+                            <span>Блок:</span>
+                            <span id="blockNumber">-</span>
+                        </div>
+                        <div class="blockchain-item">
+                            <span>Время записи:</span>
+                            <span id="blockTime">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Действия -->
+                <div class="result-actions">
+                    <button class="btn btn-outline" onclick="window.print()">
+                        <i class="fas fa-print"></i> Распечатать результат
+                    </button>
+                    <button class="btn btn-primary" id="refreshAnalysis">
+                        <i class="fas fa-sync-alt"></i> Обновить анализ
+                    </button>
+                    <button class="btn btn-primary" onclick="location.href='consent.html'">
+                        <i class="fas fa-redo"></i> Новый анализ
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Анализ выполнен с использованием технологии блокчейн. Данные защищены.</p>
+        </footer>
+    </div>
+    <script src="scripts/api.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>

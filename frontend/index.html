@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustFlow - Анализ кредитной истории</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    
+    <!-- Для разных размеров -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
+    
+    <!-- Для Apple устройств -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    
+    <!-- Для Windows 8/10 -->
+    <meta name="msapplication-TileColor" content="#4361ee">
+    <meta name="msapplication-TileImage" content="assets/icons/ms-icon-144x144.png">
+    
+    <!-- Цвет темы браузера -->
+    <meta name="theme-color" content="#4361ee">
+    
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Навигация -->
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>TrustFlow</span>
+            </div>
+            <button class="btn btn-outline" onclick="location.href='auth.html'">
+                <i class="fas fa-sign-in-alt"></i> Войти
+            </button>
+        </nav>
+
+        <!-- Герой-секция -->
+        <main class="hero">
+            <div class="hero-content">
+                <h1>Умный анализ кредитной истории</h1>
+                <p class="subtitle">
+                    Получите точную оценку вашей кредитоспособности с использованием 
+                    блокчейн-технологий и искусственного интеллекта
+                </p>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-lock"></i>
+                        <h3>Безопасно</h3>
+                        <p>Данные защищены блокчейном</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-bolt"></i>
+                        <h3>Быстро</h3>
+                        <p>Анализ за 2 минуты</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Точно</h3>
+                        <p>Точность оценки 97%</p>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-large" onclick="location.href='auth.html'">
+                    Начать анализ <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="hero-image">
+                <div class="card-animation">
+                    <div class="card card-1">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Кредитный рейтинг</span>
+                    </div>
+                    <div class="card card-2">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Анализ истории</span>
+                    </div>
+                    <div class="card card-3">
+                        <i class="fas fa-shield-check"></i>
+                        <span>Защита данных</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Информация о технологии -->
+        <section class="tech-section">
+            <h2>Как это работает?</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Регистрация</h3>
+                    <p>Создайте аккаунт за 30 секунд</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Подтверждение</h3>
+                    <p>Дайте согласие на анализ данных</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Анализ</h3>
+                    <p>Система анализирует вашу кредитную историю</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Результат</h3>
+                    <p>Получите оценку кредитоспособности</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2024 TrustFlow. Все права защищены.</p>
+            <p>Используя сервис, вы соглашаетесь с условиями обработки данных</p>
+        </footer>
+    </div>
+    <script src="scripts/main.js"></script>
+</body>
+</html>

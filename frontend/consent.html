@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustFlow - Анализ кредитной истории</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    
+    <!-- Для разных размеров -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
+    
+    <!-- Для Apple устройств -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    
+    <!-- Для Windows 8/10 -->
+    <meta name="msapplication-TileColor" content="#4361ee">
+    <meta name="msapplication-TileImage" content="assets/icons/ms-icon-144x144.png">
+    
+    <!-- Цвет темы браузера -->
+    <meta name="theme-color" content="#4361ee">
+    
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>TrustFlow</span>
+            </div>
+            <button class="btn btn-outline" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Главная
+            </button>
+        </nav>
+
+        <main class="consent-container">
+            <div class="consent-card">
+                <div class="consent-header">
+                    <h1><i class="fas fa-file-contract"></i> Согласие на обработку данных</h1>
+                    <p>Для анализа кредитной истории необходимо ваше согласие</p>
+                </div>
+
+                <div class="consent-content">
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Важная информация</h3>
+                        <p>Сервис TrustFlow запрашивает доступ к данным вашей кредитной истории 
+                        через портал Госуслуги для проведения анализа.</p>
+                    </div>
+
+                    <div class="data-list">
+                        <h3>Какие данные будут обрабатываться:</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Паспортные данные</li>
+                            <li><i class="fas fa-check-circle"></i> История кредитных обязательств</li>
+                            <li><i class="fas fa-check-circle"></i> Текущие задолженности</li>
+                            <li><i class="fas fa-check-circle"></i> Кредитные рейтинги</li>
+                            <li><i class="fas fa-check-circle"></i> Платежная дисциплина</li>
+                        </ul>
+                    </div>
+
+                    <div class="security-info">
+                        <h3><i class="fas fa-shield-alt"></i> Безопасность данных</h3>
+                        <div class="security-features">
+                            <div class="security-feature">
+                                <i class="fas fa-database"></i>
+                                <h4>Шифрование</h4>
+                                <p>Все данные шифруются по стандарту AES-256</p>
+                            </div>
+                            <div class="security-feature">
+                                <i class="fas fa-link"></i>
+                                <h4>Блокчейн</h4>
+                                <p>Хранение в распределенном реестре</p>
+                            </div>
+                            <div class="security-feature">
+                                <i class="fas fa-user-secret"></i>
+                                <h4>Анонимизация</h4>
+                                <p>Персональные данные заменяются хешами</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="terms-box">
+                        <div class="checkbox-group large">
+                            <input type="checkbox" id="agreeConsent" required>
+                            <label for="agreeConsent">
+                                Я даю согласие на обработку моих персональных данных через портал Госуслуги 
+                                для анализа кредитной истории. Подтверждаю, что ознакомлен с 
+                                <a href="#">политикой обработки данных</a>.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="consent-actions">
+                        <button class="btn btn-outline" onclick="location.href='auth.html'">
+                            <i class="fas fa-times"></i> Отказаться
+                        </button>
+                        <button class="btn btn-primary" id="giveConsent">
+                            <i class="fas fa-check"></i> Дать согласие и продолжить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="scripts/consent.js"></script>
+</body>
+</html>

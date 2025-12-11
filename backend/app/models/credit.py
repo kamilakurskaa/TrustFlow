@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Float, Integer, String, DateTime, Text, Boolean
 from sqlalchemy.sql import func
-from backend.app.database import Base
+from ..database import Base
 
 class CreditReport(Base):
     __tablename__ = "credit_reports"
