@@ -14,7 +14,6 @@ class GenerateRequest(BaseModel):
 
 class GenerateResponse(BaseModel):
     user_id: str
-    has_credit_history: bool
     features: Dict[str, float]
 
 
@@ -54,6 +53,7 @@ class CreditDataGenerator:
         data['R_DEBT_INCOME'] = round(safe_div(data['DEBT'], data['INCOME']), 2)
         data['R_DEBT_SAVINGS'] = round(safe_div(data['DEBT'], data['SAVINGS']), 2)
         data['CAT_DEBT'] = 1 if data['DEBT'] > 0 else 0
+        data['HAS_HISTORY'] = 1 if has_history else 0
 
         return data
 
@@ -69,7 +69,6 @@ def generate_data(request: GenerateRequest):
 
     return GenerateResponse(
         user_id=request.user_id,
-        has_credit_history=request.has_credit_history,
         features=features
     )
 

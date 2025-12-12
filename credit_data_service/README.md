@@ -56,24 +56,24 @@ Content-Type: application/json
 }
 ```
 
-### **Ответ (11 признаков):**
+### **Ответ (12 метрик от генератора ):
 
 ```json
 {
   "user_id": "string",
-  "has_credit_history": true,
   "features": {
     "INCOME": "0-662094",
     "SAVINGS": "0-2911863", 
     "R_SAVINGS_INCOME": "вычисл",
     "T_EXPENDITURE_12": "1177-472924",
     "R_EXPENDITURE_INCOME": "вычисл",
-    "CAT_DEPENDENTS": "true/false",
+    "CAT_DEPENDENTS": "1 || 0",
     "T_TAX_12": "0-17013",
     "DEBT": "0-5968620",
     "R_DEBT_INCOME": "вычисл",
     "R_DEBT_SAVINGS": "вычисл",
-    "CAT_DEBT": "true/false"
+    "CAT_DEBT": "1 || 0",
+    "HAS_HISTORY": "1 || 0"
   }
 }
 ```
@@ -107,7 +107,7 @@ features = get_randomizer_data("user_123", has_history=False)
 ## 🤖 Отправка данных в ML-модель
 
 ```python
-def send_to_ml_model(features: dict):
+def send_to_ml_model(features: dict ):
     """Отправка данных в ML модель"""
     # ЗАМЕНИТЕ на реальный адрес ML сервера:
     # ml_response = requests.post("http://ВАШ-ML-СЕРВЕР:5000/api/predict", ...)
