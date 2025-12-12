@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Dict
 import random
+import threading
 import uvicorn
 
 app = FastAPI()
@@ -18,7 +19,6 @@ class GenerateResponse(BaseModel):
 
 
 #  ГЕНЕРАТОР
-
 class CreditDataGenerator:
     RANGES = {
         'INCOME': (0, 662094),
@@ -28,26 +28,32 @@ class CreditDataGenerator:
         'DEBT': (0, 5968620),
     }
 
+    _local = threading.local()
+
+    @staticmethod
+    def _get_random():
+        if not hasattr(CreditDataGenerator._local, 'random'):
+            CreditDataGenerator._local.random = random.Random()
+        return CreditDataGenerator._local.random
+
     @staticmethod
     def generate(has_history: bool) -> Dict[str, float]:
-        """
-        Генерирует данные
-        """
         data = {}
+
+        rnd = CreditDataGenerator._get_random()
 
         # 1. Генерируем ОСНОВНЫЕ 5 параметров
         for key, (min_val, max_val) in CreditDataGenerator.RANGES.items():
             if key == 'DEBT' and not has_history:
-                data[key] = 0  # Нет истории → долг = 0
+                data[key] = 0
             else:
-                data[key] = random.randint(min_val, max_val)
+                data[key] = rnd.randint(min_val, max_val)
 
         # 2. Категориальные
-        data['CAT_DEPENDENTS'] = 1 if random.random() < 0.5 else 0
+        data['CAT_DEPENDENTS'] = 1 if rnd.random() < 0.5 else 0
 
         # 3. ВЫЧИСЛЯЕМ отношения
         safe_div = lambda a, b: a / b if b != 0 else 0.0
-
         data['R_SAVINGS_INCOME'] = round(safe_div(data['SAVINGS'], data['INCOME']), 2)
         data['R_EXPENDITURE_INCOME'] = round(safe_div(data['T_EXPENDITURE_12'], data['INCOME']), 2)
         data['R_DEBT_INCOME'] = round(safe_div(data['DEBT'], data['INCOME']), 2)
@@ -58,15 +64,11 @@ class CreditDataGenerator:
         return data
 
 
-#  API
-
 @app.post("/api/generate")
 def generate_data(request: GenerateRequest):
-
     features = CreditDataGenerator.generate(
         has_history=request.has_credit_history
     )
-
     return GenerateResponse(
         user_id=request.user_id,
         features=features
