@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import timedelta
-from ..database import get_db, Base
-from ..config import settings
-from ..models.user import User, UserProfile
-from ..schemas.user import UserCreate, UserLogin, Token, UserResponse
-from ..auth.security import get_password_hash, verify_password, create_access_token, get_current_user
-from ..services.blockchain_service import BlockchainService
+from backend.app.database import get_db, Base
+from backend.app.config import settings
+from backend.app.models.user import User, UserProfile
+from backend.app.schemas.user import UserCreate, UserLogin, Token, UserResponse
+from backend.app.auth.security import get_password_hash, verify_password, create_access_token, get_current_user
 router = APIRouter()
 
 
@@ -41,25 +40,6 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     db.add(user)
     db.commit()
     db.refresh(user)
-
-    # Создаем профиль на блокчейне (НОВОЕ ↓)
-    if user.wallet_address:
-        blockchain_service = BlockchainService()
-        tx_hash = blockchain_service.create_user_profile(
-            user_id=user.id,
-            email=user.email,
-            wallet_address=user.wallet_address
-        )
-
-        if tx_hash:
-            user.blockchain_user_id = tx_hash
-            db.commit()
-
-    # Создаем пустой профиль
-    profile = UserProfile(user_id=user.id)
-    db.add(profile)
-    db.commit()
-
     return user
 
 

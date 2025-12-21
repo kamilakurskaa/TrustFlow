@@ -35,15 +35,3 @@ class UserProfile(Base):
     monthly_income = Column(Integer)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-
-class UploadedDocument(Base):
-    __tablename__ = "uploaded_documents"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, index=True)
-    filename = Column(String)
-    file_path = Column(String)
-    document_type = Column(String)  # gosuslugi, bank_statement, etc
-    parsed_data = Column(JSON)  # Извлеченные данные
-    is_verified = Column(Boolean, default=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())

@@ -3,12 +3,20 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 from sqlalchemy import text
 
-from .database import engine
-from .routes.auth import router as auth_router
-from .routes.credit import router as credit_router
+from backend.app.database import engine, Base
+from backend.app.routes.auth import router as auth_router
+from backend.app.routes.credit import router as credit_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.info("Инициализация базы данных...")
+try:
+    # Создаем все таблицы
+    Base.metadata.create_all(bind=engine, checkfirst=True)
+    logger.info("✅ Таблицы успешно созданы")
+except Exception as e:
+    logger.error(f"❌ Ошибка при создании таблиц: {e}")
+    raise
 
 app = FastAPI(
     title="TrustFlow",

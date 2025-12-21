@@ -7,7 +7,6 @@ class UploadedDocument(Base):
     """Модель для загруженных документов (PDF с Госуслуг и т.д.)"""
 
     __tablename__ = "uploaded_documents"
-    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_id = Column(Integer, index=True, nullable=False)

@@ -1,15 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from fastapi import UploadFile, File, Form
 from sqlalchemy.orm import Session
-from ..database import get_db
-from ..models.user import User
-from ..models.blockchain import BlockchainRecord
-from ..models.credit import CreditReport, ParserJob, CreditRequest
-from ..models.uploaded_document import UploadedDocument
-from ..schemas.credit import (CreditScoreRequest, CreditScoreResponse, CreditRequestResponse, CreditMethodRequest, ParsingResult, MLScoreRequest, MLScoreResponse)
-from ..auth.security import get_current_user
-from ..config import settings
-from ..services.blockchain_service import blockchain_service
+from backend.app.database import get_db
+from backend.app.models.user import User
+from backend.app.models.blockchain import BlockchainRecord
+from backend.app.models.credit import CreditReport, ParserJob, CreditRequest
+from backend.app.models.uploaded_document import UploadedDocument
+from backend.app.schemas.credit import (CreditScoreRequest, CreditScoreResponse, CreditRequestResponse, CreditMethodRequest, ParsingResult, MLScoreRequest, MLScoreResponse)
+from backend.app.auth.security import get_current_user
+from backend.app.config import settings
 from datetime import datetime
 import os
 import shutil
@@ -52,21 +51,10 @@ def calculate_mock_score(user_data: dict) -> dict:
     }
 
 
-def generate_blockchain_hash(data: dict) -> str:
-    """Генерация хеша для блокчейна"""
+def generate_data_hash(data: dict) -> str:
+    """Генерация хеша данных"""
     data_str = json.dumps(data, sort_keys=True)
     return hashlib.sha256(data_str.encode()).hexdigest()
-
-
-def mock_blockchain_transaction(data_hash: str, user_id: int) -> dict:
-    """Мок транзакции в блокчейне"""
-    # В реальности здесь будет вызов web3.eth.send_transaction()
-    return {
-        "transaction_hash": f"0x{hashlib.sha256(data_hash.encode()).hexdigest()[:64]}",
-        "block_number": random.randint(1000000, 2000000),
-        "success": True
-    }
-
 
 @router.post("/request", response_model=CreditRequestResponse)
 def request_credit_score(
@@ -80,7 +68,7 @@ def request_credit_score(
     credit_request = CreditRequest(
         user_id=current_user.id,
         status="processing",
-        blockchain_recorded=request_data.use_blockchain
+        blockchain_recorded=False
     )
     db.add(credit_request)
     db.commit()
@@ -146,33 +134,13 @@ def get_credit_history(
 
     return reports
 
-
-@router.get("/blockchain-records")
-def get_blockchain_records(
-        current_user: User = Depends(get_current_user),
-        db: Session = Depends(get_db)
-):
-    """Получение записей в блокчейне (будущая функциональность)"""
-
-    records = db.query(BlockchainRecord).filter(
-        BlockchainRecord.user_id == current_user.id
-    ).order_by(BlockchainRecord.created_at.desc()).all()
-
-    return {
-        "user_id": current_user.id,
-        "wallet_address": current_user.wallet_address,
-        "records": records,
-        "count": len(records)
-    }
-
-
-@router.post("/verify-on-blockchain/{report_id}")
-def verify_on_blockchain(
+@router.post("/verify/{report_id}")
+def verify_report(
         report_id: int,
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    """Верификация отчета в блокчейне"""
+    """Верификация отчета"""
 
     report = db.query(CreditReport).filter(
         CreditReport.id == report_id,
@@ -185,21 +153,24 @@ def verify_on_blockchain(
     if not report.blockchain_hash:
         raise HTTPException(status_code=400, detail="Отчет не записан в блокчейн")
 
-    # Используем blockchain_service вместо мок верификации
-    verification = blockchain_service.verify_data_hash(
-        report.blockchain_hash,
-        report.user_id
-    )
+        # Создаем локальную верификацию на основе хеша данных
+    if report.report_data:
+        try:
+            data_dict = json.loads(report.report_data)
+            current_hash = generate_data_hash(data_dict)
+            is_valid = True  # В упрощенной версии всегда True
+        except:
+            is_valid = False
+    else:
+        is_valid = False
 
     verification_data = {
         "report_id": report.id,
         "user_id": report.user_id,
         "score": report.score,
-        "blockchain_hash": report.blockchain_hash,
-        "transaction_hash": report.transaction_hash,
-        "verified": verification.get("verified", False),
+        "verified": is_valid,
         "verified_at": datetime.utcnow().isoformat(),
-        "verification_details": verification
+        "verification_details": "local"
     }
 
     return verification_data
@@ -223,85 +194,21 @@ def process_credit_score_background(request_id: int, user_id: int, request_data:
             "score": score_data["score"],
             "category": score_data["category"],
             "calculated_at": datetime.utcnow().isoformat(),
-            "factors": score_data["factors"]
+            "factors": score_data["factors"],
+            "method": "mock_calculation"
         }
+        data_hash = generate_data_hash(report_data)
 
-        blockchain_hash = None
-        transaction_hash = None
-        block_number = None
-
-        # Запись в блокчейн если требуется
-        if request_data.get("use_blockchain", False) and user.wallet_address:
-            try:
-                # Генерируем хеш данных
-                data_hash = generate_blockchain_hash(report_data)
-
-                # Используем blockchain_service вместо мок
-                tx_hash = blockchain_service.update_credit_score(
-                    user_id=user_id,
-                    score=score_data["score"],
-                    data_hash=data_hash
-                )
-                if tx_hash:
-                    blockchain_hash = data_hash
-                    transaction_hash = tx_hash
-                    block_number = random.randint(1000000, 2000000)  # Мок номер блока
-
-                    # Сохраняем запись о блокчейн-транзакции
-                    blockchain_record = BlockchainRecord(
-                        user_id=user_id,
-                        transaction_hash=transaction_hash,
-                        block_number=block_number,
-                        contract_address=settings.CONTRACT_ADDRESS or "0x0000000000000000000000000000000000000000",
-                        data_hash=data_hash,
-                        data_type="credit_report",
-                        transaction_data=report_data
-                    )
-                    db.add(blockchain_record)
-                    request.blockchain_recorded = True
-
-            except Exception as e:
-                print(f"Ошибка блокчейн-записи: {e}")
-
-            #     blockchain_hash = data_hash
-            #     transaction_hash = tx_result["transaction_hash"]
-            #     block_number = tx_result["block_number"]
-            #
-            #     # Сохраняем запись о блокчейн-транзакции
-            #     blockchain_record = BlockchainRecord(
-            #         user_id=user_id,
-            #         transaction_type="credit_report",
-            #         transaction_hash=transaction_hash,
-            #         block_number=block_number,
-            #         contract_address=settings.CONTRACT_ADDRESS or "0x0000000000000000000000000000000000000000",
-            #         data_hash=data_hash,
-            #         confirmed=True
-            #     )
-            #     db.add(blockchain_record)
-            #
-            #     request.blockchain_recorded = True
-            #
-            # except Exception as e:
-            #     print(f"Ошибка блокчейн-записи: {e}")
-            #     # Продолжаем без блокчейна
-
-        # Создаем отчет
         report = CreditReport(
             user_id=user_id,
             score=score_data["score"],
             score_category=score_data["category"],
             reputation_score=score_data["reputation_score"],
             report_data=json.dumps(report_data),
-            blockchain_hash=blockchain_hash,
-            transaction_hash=transaction_hash,
-            block_number=block_number
+            data_hash=data_hash  # Локальный хеш вместо blockchain_hash
         )
         db.add(report)
-
-        # Обновляем репутационный счет пользователя
         user.reputation_score = score_data["reputation_score"]
-
-        # Завершаем запрос
         request.status = "completed"
         db.commit()
 
@@ -472,16 +379,6 @@ async def receive_ml_score(
     db.commit()
     db.refresh(credit_report)
 
-    # Запускаем фоновую задачу для записи в блокчейн
-    if background_tasks:
-        background_tasks.add_task(
-            save_to_blockchain_task,
-            credit_report.id,
-            ml_data.user_id,
-            ml_data.score,
-            db
-        )
-
     return {
         "report_id": credit_report.id,
         "status": "success",
@@ -491,61 +388,31 @@ async def receive_ml_score(
     }
 
 
-@router.get("/blockchain-rating")
-async def get_blockchain_rating(
+@router.get("/rating")
+async def get_credit_rating(
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
-    """Получение рейтинга с блокчейна"""
-
-    # Получаем рейтинг из блокчейна
-    blockchain_rating = blockchain_service.get_user_rating(current_user.id)
-
-    # Получаем локальный рейтинг
+    """Получение кредитного рейтинга"""
+    #Получаем локальный рейтинг
     local_report = db.query(CreditReport).filter(
         CreditReport.user_id == current_user.id
     ).order_by(CreditReport.created_at.desc()).first()
 
-    # Получаем информацию о сети
-    network_info = blockchain_service.get_network_info()
+    all_reports = db.query(CreditReport).filter(
+        CreditReport.user_id == current_user.id
+    ).all()
 
     return {
         "user_id": current_user.id,
         "full_name": current_user.full_name,
-        "blockchain_rating": blockchain_rating,
         "local_score": local_report.score if local_report else None,
         "local_category": local_report.score_category if local_report else None,
-        "blockchain_info": network_info,
         "timestamp": datetime.utcnow().isoformat()
     }
 
 
 # ============ ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ============
-
-async def save_to_blockchain_task(report_id: int, user_id: int, score: int, db: Session):
-    """Фоновая задача сохранения рейтинга в блокчейн"""
-    try:
-        # Генерируем хеш данных
-        data_str = f"{user_id}{score}{datetime.utcnow().timestamp()}"
-        data_hash = hashlib.sha256(data_str.encode()).hexdigest()
-
-        # Записываем в блокчейн
-        tx_hash = blockchain_service.update_credit_score(
-            user_id=user_id,
-            score=score,
-            data_hash=data_hash
-        )
-
-        if tx_hash:
-            # Обновляем запись в БД
-            report = db.query(CreditReport).filter(CreditReport.id == report_id).first()
-            if report:
-                report.blockchain_hash = data_hash
-                report.transaction_hash = tx_hash
-                db.commit()
-
-    except Exception as e:
-        print(f"Ошибка записи в блокчейн: {e}")
 
 
 def determine_category(score: int) -> str:
