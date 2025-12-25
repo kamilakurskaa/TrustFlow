@@ -1,7 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import logging
 from sqlalchemy import text
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 from backend.app.database import engine, Base
 from backend.app.routes.auth import router as auth_router
@@ -28,7 +34,14 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,63 +50,61 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/api/auth", tags=["Аутентификация"])
 app.include_router(credit_router, prefix="/api/credit", tags=["Кредитный скоринг"])
 
-@app.get("/")
-async def root():
-    return {"message": "TrustFlow Credit Platform API"}
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(os.path.dirname(current_dir))
+frontend_path = os.path.join(project_root, "frontend")
 
-@app.get("/health")
-async def health_check():
-    try:
-        with engine.connect() as conn:
-            # Проверяем существование таблицы users
-            result = conn.execute(
-                text("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'users');")
-            ).scalar()
+print(f"🔍 Ищем фронтенд по пути: {frontend_path}")
 
-            if result:
-                # Пробуем получить количество пользователей
-                count = conn.execute(text("SELECT COUNT(*) FROM users;")).scalar()
-                return {
-                    "status": "healthy",
-                    "database": "connected",
-                    "users_table": "exists",
-                    "users_count": count
-                }
-            else:
-                return {
-                    "status": "unhealthy",
-                    "database": "connected",
-                    "users_table": "missing",
-                    "message": "Таблица users не найдена. Создайте таблицы через SQL скрипт."
-                }
-
-    except Exception as e:
+if os.path.exists(frontend_path):
+    print("✅ Фронтенд найден, монтируем статические файлы")
+    
+    # Монтируем статические файлы (CSS, JS, изображения)
+    app.mount("/styles", StaticFiles(directory=os.path.join(frontend_path, "styles")), name="styles")
+    app.mount("/scripts", StaticFiles(directory=os.path.join(frontend_path, "scripts")), name="scripts")
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_path, "assets")), name="assets")
+    
+    # Монтируем HTML файлы
+    @app.get("/")
+    async def serve_index():
+        from fastapi.responses import FileResponse
+        return FileResponse(os.path.join(frontend_path, "index.html"))
+    
+    @app.get("/{page_name}")
+    async def serve_page(page_name: str):
+        from fastapi.responses import FileResponse
+        
+        # Проверяем существование файла
+        page_path = os.path.join(frontend_path, page_name)
+        if os.path.exists(page_path):
+            return FileResponse(page_path)
+        
+        # Если файл не найден, пробуем добавить .html
+        html_path = os.path.join(frontend_path, f"{page_name}.html")
+        if os.path.exists(html_path):
+            return FileResponse(html_path)
+        
+        # Если страница не найдена, возвращаем 404
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Страница не найдена")
+    
+else:
+    print("⚠️ Фронтенд не найден. Запускаем только API")
+    
+    @app.get("/")
+    async def root():
         return {
-            "status": "unhealthy",
-            "error": str(e),
-            "message": "Ошибка подключения к базе данных"
+            "message": "TrustFlow API запущен",
+            "frontend": "не найден",
+            "api_docs": "/api/docs",
+            "api_endpoints": [
+                "/api/auth/login",
+                "/api/auth/register",
+                "/api/users/me",
+                "/api/credit/score"
+            ]
         }
-
-
-@app.get("/tables")
-async def get_tables():
-    """Получение списка всех таблиц"""
-    try:
-        with engine.connect() as conn:
-            result = conn.execute(
-                text("""
-                    SELECT table_name 
-                    FROM information_schema.tables 
-                    WHERE table_schema = 'public'
-                    ORDER BY table_name;
-                """)
-            ).fetchall()
-
-            tables = [row[0] for row in result]
-            return {"tables": tables, "count": len(tables)}
-
-    except Exception as e:
-        return {"error": str(e)}
+    
 
 if __name__ == "__main__":
     import uvicorn
