@@ -9,10 +9,10 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-from backend.app.database import engine, Base
-from backend.app.routes.auth import router as auth_router
-from backend.app.routes.credit import router as credit_router
-from backend.app.routes.users import router as users_router
+from .database import engine, Base
+from .routes.auth import router as auth_router
+from .routes.credit import router as credit_router
+from .routes.users import router as users_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

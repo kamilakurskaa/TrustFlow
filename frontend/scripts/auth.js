@@ -34,11 +34,14 @@ document.addEventListener('DOMContentLoaded', function() {
 console.log('Auth script loaded');
 
 function checkAuthStatus() {
+    console.log('checkAuthStatus called');
     const token = localStorage.getItem('token');
-    if (token && window.location.pathname.includes('auth.html')) {
-        // Если уже авторизован, перенаправляем на главную
-        window.location.href = 'index.html';
-    }
+    console.log('Token:', token);
+
+    // ВРЕМЕННО отключаем редирект
+    // if (token && window.location.pathname.includes('auth.html')) {
+    //     window.location.href = 'index.html';
+    // }
 }
 
 function switchTab(tabName) {
@@ -64,13 +67,13 @@ async function handleLogin(e) {
 
     e.preventDefault();
     console.log('Default prevented');
-    e.stopPropagation();
+    //e.stopPropagation();
     console.log('Propagation stopped');
 
     console.log('Login started');
     const email = document.getElementById('loginEmail')?.value;
     const password = document.getElementById('loginPassword')?.value;
-    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const submitBtn = document.querySelector('#loginForm button[type="button"]');
     
     if (!email || !password) {
         showError('Пожалуйста, заполните все поля');

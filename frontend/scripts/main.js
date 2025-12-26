@@ -90,20 +90,29 @@ function initHomePage() {
 
 async function initResultPage() {
     if (!checkPageAuth()) return;
-    
+    console.log('=== RESULT PAGE LOADED ===');
+    console.log('Token:', localStorage.getItem('token'));
+    console.log('User:', localStorage.getItem('user'));
     try {
         showLoading(true);
 
         console.log('🔍 Loading result page...');
 
         // 1. Получаем данные пользователя
-        const user = await TrustFlowAPI.getCurrentUser();
+        let user;
+        try {
+            user = await TrustFlowAPI.getCurrentUser();
+            console.log('✅ User from API:', user);
+        } catch (error) {
+            console.error('❌ API error, using localStorage:', error);
+            user = JSON.parse(localStorage.getItem('user'));
+        }
         if (!user) throw new Error('Не удалось загрузить данные пользователя');
 
         console.log('✅ User data loaded:', user.email);
 
         // 2. ПОЛУЧАЕМ ИЛИ СОЗДАЕМ кредитный отчет
-        let creditData = await TrustFlowAPI.getOrCreateCreditScore();
+        let creditData = await TrustFlowAPI.getCreditScore();
 
         if (!creditData) {
             // Если все еще нет данных

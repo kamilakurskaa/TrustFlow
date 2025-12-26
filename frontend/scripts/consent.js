@@ -82,9 +82,12 @@ async function handleConsent(e) {
         showSuccess('Согласие успешно принято!');
         
         // Перенаправляем на страницу загрузки документа
+
         setTimeout(() => {
+            console.log('Redirecting to result.html...');
+            console.log('Token exists:', !!localStorage.getItem('token'));
             window.location.href = 'result.html';
-        }, 1500);
+        }, 3000);
         
     } catch (error) {
         console.error('Consent error:', error);

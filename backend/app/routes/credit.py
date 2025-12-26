@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from fastapi import UploadFile, File, Form
 from sqlalchemy.orm import Session
-from backend.app.database import get_db
-from backend.app.models.user import User
-from backend.app.models.blockchain import BlockchainRecord
-from backend.app.models.credit import CreditReport, ParserJob, CreditRequest
-from backend.app.models.uploaded_document import UploadedDocument
-from backend.app.schemas.credit import (CreditScoreRequest, CreditScoreResponse, CreditRequestResponse, CreditMethodRequest, ParsingResult, MLScoreRequest, MLScoreResponse)
-from backend.app.auth.security import get_current_user
-from backend.app.config import settings
+from ..database import get_db
+from ..models.user import User
+from ..models.blockchain import BlockchainRecord
+from ..models.credit import CreditReport, ParserJob, CreditRequest
+from ..models.uploaded_document import UploadedDocument
+from ..schemas.credit import (CreditScoreRequest, CreditScoreResponse, CreditRequestResponse, CreditMethodRequest, ParsingResult, MLScoreRequest, MLScoreResponse)
+from ..auth.security import get_current_user
+from ..config import settings
 from datetime import datetime
 import os
 import shutil
