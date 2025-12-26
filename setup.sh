@@ -26,8 +26,11 @@ fi
 echo "🛑 Остановка старых контейнеров..."
 docker-compose down
 
-# Удаляем старые образы (опционально)
-# docker-compose down --rmi all
+# Останавливаем локальные сервисы
+echo "🔧 Освобождение портов..."
+sudo systemctl stop postgresql 2>/dev/null || true
+sudo systemctl stop apache2 2>/dev/null || true
+sudo systemctl stop nginx 2>/dev/null || true
 
 # Собираем и запускаем
 echo "🔨 Сборка образов..."
@@ -38,7 +41,7 @@ docker-compose up -d
 
 # Ждем запуска БД
 echo "⏳ Ожидание запуска базы данных..."
-sleep 10
+sleep 15
 
 # Проверка статуса
 echo ""

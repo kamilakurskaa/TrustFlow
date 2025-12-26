@@ -1,12 +1,9 @@
-// API клиент для TrustFlow
 console.log('✅ api.js загружен');
 
 window.TrustFlowAPI = {
-    // Используем относительные пути (через Nginx proxy)
     baseURL: '/api',
 
     async getCurrentUser() {
-        console.log('📞 getCurrentUser вызван');
         const token = localStorage.getItem('token');
 
         try {
@@ -22,7 +19,6 @@ window.TrustFlowAPI = {
             }
 
             const user = await response.json();
-            console.log('👤 Пользователь получен:', user.email);
             return user;
         } catch (error) {
             console.error('❌ Ошибка getCurrentUser:', error);
@@ -31,9 +27,6 @@ window.TrustFlowAPI = {
     },
 
     async getCreditScore() {
-        console.log('📞 getCreditScore вызван');
-
-        // Рандомный кредитный рейтинг (300-850)
         const score = Math.floor(Math.random() * (850 - 300 + 1)) + 300;
 
         let category;

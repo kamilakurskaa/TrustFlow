@@ -1,7 +1,4 @@
-version: '3.8'
-
 services:
-  # PostgreSQL база данных
   postgres:
     image: postgres:15-alpine
     container_name: trustflow_postgres
@@ -21,7 +18,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # Backend (FastAPI)
   backend:
     build:
       context: ./backend
@@ -39,12 +35,9 @@ services:
     networks:
       - trustflow_network
     volumes:
-      - ./backend:/app
       - uploads_data:/app/uploads
-    command: python run.py
     restart: unless-stopped
 
-  # Credit Data Service (генератор данных)
   credit_data_service:
     build:
       context: ./credit_data_service
@@ -56,7 +49,6 @@ services:
       - trustflow_network
     restart: unless-stopped
 
-  # Frontend (Nginx)
   frontend:
     build:
       context: ./frontend
