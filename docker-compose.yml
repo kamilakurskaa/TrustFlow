@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # PostgreSQL база данных
+  postgres:
+    image: postgres:15-alpine
+    container_name: trustflow_postgres
+    environment:
+      POSTGRES_DB: trustflow
+      POSTGRES_USER: trustflow_user
+      POSTGRES_PASSWORD: trustflow_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - trustflow_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trustflow_user -d trustflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend (FastAPI)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: trustflow_backend
+    environment:
+      - DATABASE_URL=postgresql://trustflow_user:trustflow_pass@postgres:5432/trustflow
+      - SECRET_KEY=super-puper-mega-ultra-secret-key-change-in-production
+      - BLOCKCHAIN_RPC_URL=http://mock:8545
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - trustflow_network
+    volumes:
+      - ./backend:/app
+      - uploads_data:/app/uploads
+    command: python run.py
+    restart: unless-stopped
+
+  # Credit Data Service (генератор данных)
+  credit_data_service:
+    build:
+      context: ./credit_data_service
+      dockerfile: Dockerfile
+    container_name: trustflow_credit_service
+    ports:
+      - "8002:8002"
+    networks:
+      - trustflow_network
+    restart: unless-stopped
+
+  # Frontend (Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: trustflow_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - trustflow_network
+    restart: unless-stopped
+
+networks:
+  trustflow_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  uploads_data:
