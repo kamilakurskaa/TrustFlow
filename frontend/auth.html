@@ -3,117 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrustFlow - Анализ кредитной истории</title>
+    <title>TrustFlow - Вход в систему</title>
     
     <!-- Favicon -->
     <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
     
-    <!-- Для разных размеров -->
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/icon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
-    
-    <!-- Для Apple устройств -->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
-    
-    <!-- Для Windows 8/10 -->
-    <meta name="msapplication-TileColor" content="#4361ee">
-    <meta name="msapplication-TileImage" content="assets/icons/ms-icon-144x144.png">
-    
-    <!-- Цвет темы браузера -->
-    <meta name="theme-color" content="#4361ee">
-    
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <a href="index.html" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <h2>Добро пожаловать</h2>
-                <p>Войдите или создайте аккаунт</p>
+    <div class="auth-wrapper">
+        <!-- Анимированный фон -->
+        <div class="animated-bg">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <!-- Основной контейнер -->
+        <div class="auth-container">
+            <!-- Левая панель с информацией -->
+            <div class="auth-info">
+                <div class="logo-section">
+                    <a href="index.html" class="logo-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>TrustFlow</span>
+                    </a>
+                </div>
+                <div class="info-content">
+                    <h1>Добро пожаловать!</h1>
+                    <p>Умная система анализа кредитной истории с использованием блокчейн-технологий</p>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Безопасное хранение данных</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Быстрый анализ за 2 минуты</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Точность оценки 97%</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="tabs">
-                <button class="tab active" id="loginTab">Вход</button>
-                <button class="tab" id="registerTab">Регистрация</button>
-            </div>
+            <!-- Правая панель с формами -->
+            <div class="auth-forms">
+                <div class="forms-wrapper">
+                    <!-- Переключатель табов -->
+                    <div class="tabs">
+                        <button class="tab active" id="loginTab">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Вход
+                        </button>
+                        <button class="tab" id="registerTab">
+                            <i class="fas fa-user-plus"></i>
+                            Регистрация
+                        </button>
+                    </div>
 
-            <!-- Форма входа -->
-            <form id="loginForm" class="auth-form active">
-                <div class="input-group">
-                    <label for="loginEmail">
-                        <i class="fas fa-envelope"></i> Email
-                    </label>
-                    <input type="email" id="loginEmail" placeholder="ваш@email.com" required>
-                </div>
-                <div class="input-group">
-                    <label for="loginPassword">
-                        <i class="fas fa-lock"></i> Пароль
-                    </label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" required>
-                    <button type="button" class="show-password" onclick="togglePassword('loginPassword')">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                <button type="button" onclick="handleLoginSubmit()" class="btn btn-primary btn-full">
-                    <i class="fas fa-sign-in-alt"></i> Войти
-                </button>
-                <div class="divider">
-                    <span>или</span>
-                </div>
-                <button type="button" class="btn btn-outline btn-full" onclick="location.href='index.html'">
-                    <i class="fas fa-home"></i> Вернуться на главную
-                </button>
-            </form>
+                    <!-- Форма входа -->
+                    <form id="loginForm" class="auth-form active">
+                        <div class="form-header">
+                            <h2>Войти в аккаунт</h2>
+                            <p>Введите свои данные для входа</p>
+                        </div>
 
-            <!-- Форма регистрации -->
-            <form id="registerForm" class="auth-form">
-                <div class="input-group">
-                    <label for="registerEmail">
-                        <i class="fas fa-envelope"></i> Email
-                    </label>
-                    <input type="email" id="registerEmail" placeholder="ваш@email.com" required>
-                </div>
-                <div class="input-group">
-                    <label for="registerPassword">
-                        <i class="fas fa-lock"></i> Пароль
-                    </label>
-                    <input type="password" id="registerPassword" placeholder="••••••••" required>
-                    <button type="button" class="show-password" onclick="togglePassword('registerPassword')">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                <div class="input-group">
-                    <label for="confirmPassword">
-                        <i class="fas fa-lock"></i> Подтвердите пароль
-                    </label>
-                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
-                    <button type="button" class="show-password" onclick="togglePassword('confirmPassword')">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="agreeTerms" required>
-                    <label for="agreeTerms">
-                        Я соглашаюсь с <a href="#">условиями использования</a> и 
-                        <a href="#">политикой конфиденциальности</a>
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full">
-                    <i class="fas fa-user-plus"></i> Зарегистрироваться
-                </button>
-            </form>
+                        <div class="input-group">
+                            <label for="loginEmail">
+                                <i class="fas fa-envelope"></i>
+                                Email адрес
+                            </label>
+                            <input 
+                                type="email" 
+                                id="loginEmail" 
+                                placeholder="example@email.com" 
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
 
-            <div class="auth-footer">
-                <p>Забыли пароль? <a href="#" id="forgotPassword">Восстановить</a></p>
+                        <div class="input-group">
+                            <label for="loginPassword">
+                                <i class="fas fa-lock"></i>
+                                Пароль
+                            </label>
+                            <div class="password-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="loginPassword" 
+                                    placeholder="Введите пароль" 
+                                    required
+                                    autocomplete="current-password"
+                                >
+                                <button type="button" class="show-password" onclick="togglePassword('loginPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="rememberMe">
+                                <span>Запомнить меня</span>
+                            </label>
+                            <a href="#" id="forgotPassword" class="forgot-link">Забыли пароль?</a>
+                        </div>
+
+                        <button type="button" onclick="handleLoginSubmit()" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Войти
+                        </button>
+
+                        <div class="divider">
+                            <span>или</span>
+                        </div>
+
+                        <a href="index.html" class="btn btn-outline">
+                            <i class="fas fa-home"></i>
+                            Вернуться на главную
+                        </a>
+                    </form>
+
+                    <!-- Форма регистрации -->
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-header">
+                            <h2>Создать аккаунт</h2>
+                            <p>Заполните форму для регистрации</p>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="registerEmail">
+                                <i class="fas fa-envelope"></i>
+                                Email адрес
+                            </label>
+                            <input 
+                                type="email" 
+                                id="registerEmail" 
+                                placeholder="example@email.com" 
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <label for="registerPassword">
+                                <i class="fas fa-lock"></i>
+                                Пароль
+                            </label>
+                            <div class="password-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="registerPassword" 
+                                    placeholder="Минимум 8 символов" 
+                                    required
+                                    autocomplete="new-password"
+                                >
+                                <button type="button" class="show-password" onclick="togglePassword('registerPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
+                                </div>
+                                <span class="strength-text" id="strengthText">Слабый пароль</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="confirmPassword">
+                                <i class="fas fa-lock"></i>
+                                Подтвердите пароль
+                            </label>
+                            <div class="password-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="confirmPassword" 
+                                    placeholder="Повторите пароль" 
+                                    required
+                                    autocomplete="new-password"
+                                >
+                                <button type="button" class="show-password" onclick="togglePassword('confirmPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span>
+                                    Я соглашаюсь с 
+                                    <a href="#" onclick="event.preventDefault()">условиями использования</a> 
+                                    и 
+                                    <a href="#" onclick="event.preventDefault()">политикой конфиденциальности</a>
+                                </span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i>
+                            Зарегистрироваться
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
     <script src="scripts/auth.js"></script>
+    <script>
+        // Индикатор силы пароля
+        document.getElementById('registerPassword')?.addEventListener('input', function(e) {
+            const password = e.target.value;
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            let strength = 0;
+            if (password.length >= 8) strength += 25;
+            if (password.match(/[a-z]/)) strength += 25;
+            if (password.match(/[A-Z]/)) strength += 25;
+            if (password.match(/[0-9]/)) strength += 25;
+            
+            strengthFill.style.width = strength + '%';
+            
+            if (strength <= 25) {
+                strengthFill.style.background = '#f44336';
+                strengthText.textContent = 'Слабый пароль';
+            } else if (strength <= 50) {
+                strengthFill.style.background = '#ff9800';
+                strengthText.textContent = 'Средний пароль';
+            } else if (strength <= 75) {
+                strengthFill.style.background = '#ffc107';
+                strengthText.textContent = 'Хороший пароль';
+            } else {
+                strengthFill.style.background = '#4caf50';
+                strengthText.textContent = 'Отличный пароль';
+            }
+        });
+    </script>
 </body>
 </html>

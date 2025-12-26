@@ -1,5 +1,37 @@
-.auth-container {
+:root {
+    --primary-color: #4361ee;
+    --primary-dark: #3651d4;
+    --primary-light: #7289fd;
+    --secondary-color: #7209b7;
+    --success-color: #4caf50;
+    --danger-color: #f44336;
+    --warning-color: #ff9800;
+    --dark-color: #1a1a2e;
+    --light-color: #f8f9fa;
+    --gray-color: #6c757d;
+    --gray-light: #e9ecef;
+    --border-radius: 12px;
+    --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    color: var(--dark-color);
+    overflow-x: hidden;
+}
+
+/* Анимированный фон */
+.auth-wrapper {
     min-height: 100vh;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -7,152 +39,455 @@
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.auth-card {
+.animated-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(67, 97, 238, 0.3);
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 500px;
+    height: 500px;
+    background: rgba(118, 75, 162, 0.3);
+    bottom: -150px;
+    right: -150px;
+    animation-delay: 5s;
+}
+
+.shape-3 {
+    width: 350px;
+    height: 350px;
+    background: rgba(76, 201, 240, 0.3);
+    top: 50%;
+    left: 50%;
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+        transform: translate(-20px, 30px) scale(0.9);
+    }
+}
+
+/* Основной контейнер */
+.auth-container {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 45% 55%;
+    max-width: 1100px;
     width: 100%;
-    max-width: 450px;
+    min-height: 600px;
     background: white;
-    border-radius: var(--border-radius);
+    border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     overflow: hidden;
 }
 
-.auth-header {
-    padding: 2.5rem 2rem 1rem;
-    text-align: center;
+/* Левая информационная панель */
+.auth-info {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
     position: relative;
+    overflow: hidden;
 }
 
-.back-btn {
+.auth-info::before {
+    content: '';
     position: absolute;
-    left: 1.5rem;
-    top: 1.5rem;
-    color: var(--gray-color);
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: pulse 15s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0.3; }
+}
+
+.logo-section {
+    position: relative;
+    z-index: 1;
+}
+
+.logo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
     text-decoration: none;
+    transition: var(--transition);
+}
+
+.logo-link i {
+    font-size: 2.5rem;
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.logo-link:hover {
+    transform: translateX(5px);
+}
+
+.info-content {
+    position: relative;
+    z-index: 1;
+}
+
+.info-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.info-content > p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1rem;
+    opacity: 0.95;
+}
+
+.feature-item i {
     font-size: 1.2rem;
 }
 
-.auth-header h2 {
-    color: var(--dark-color);
-    margin-bottom: 0.5rem;
+/* Правая панель с формами */
+.auth-forms {
+    padding: 60px 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
 }
 
-.auth-header p {
-    color: var(--gray-color);
+.forms-wrapper {
+    width: 100%;
+    max-width: 400px;
 }
 
 /* Табы */
 .tabs {
-    display: flex;
-    border-bottom: 1px solid var(--gray-light);
-    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 30px;
+    background: var(--gray-light);
+    padding: 5px;
+    border-radius: var(--border-radius);
 }
 
 .tab {
-    flex: 1;
-    padding: 1rem;
-    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: transparent;
     border: none;
+    border-radius: calc(var(--border-radius) - 3px);
     font-size: 1rem;
     font-weight: 600;
     color: var(--gray-color);
     cursor: pointer;
     transition: var(--transition);
-    position: relative;
 }
 
-.tab.active {
+.tab:hover {
     color: var(--primary-color);
 }
 
-.tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--primary-color);
+.tab.active {
+    background: white;
+    color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab i {
+    font-size: 1.1rem;
 }
 
 /* Формы */
 .auth-form {
-    padding: 2rem;
     display: none;
+    animation: fadeIn 0.3s ease-in;
 }
 
 .auth-form.active {
     display: block;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-header {
+    margin-bottom: 30px;
+}
+
+.form-header h2 {
+    font-size: 1.8rem;
+    color: var(--dark-color);
+    margin-bottom: 8px;
+}
+
+.form-header p {
+    color: var(--gray-color);
+    font-size: 0.95rem;
+}
+
+/* Поля ввода */
 .input-group {
-    margin-bottom: 1.5rem;
-    position: relative;
+    margin-bottom: 20px;
 }
 
 .input-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--dark-color);
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-color);
+    font-size: 0.9rem;
+}
+
+.input-group label i {
+    color: var(--primary-color);
 }
 
 .input-group input {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 14px 16px;
     border: 2px solid var(--gray-light);
     border-radius: var(--border-radius);
     font-size: 1rem;
     transition: var(--transition);
+    background: var(--light-color);
 }
 
 .input-group input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+}
+
+.password-wrapper {
+    position: relative;
 }
 
 .show-password {
     position: absolute;
     right: 12px;
-    top: 38px;
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
     border: none;
     color: var(--gray-color);
     cursor: pointer;
-    padding: 4px;
+    padding: 8px;
+    transition: var(--transition);
 }
 
-.checkbox-group {
+.show-password:hover {
+    color: var(--primary-color);
+}
+
+/* Индикатор силы пароля */
+.password-strength {
+    margin-top: 8px;
+}
+
+.strength-bar {
+    height: 4px;
+    background: var(--gray-light);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--danger-color);
+    transition: all 0.3s ease;
+}
+
+.strength-text {
+    font-size: 0.8rem;
+    color: var(--gray-color);
+}
+
+/* Опции формы */
+.form-options {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin: 1.5rem 0;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.checkbox-group input {
-    margin-top: 4px;
-}
-
-.checkbox-group label {
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-size: 0.9rem;
     color: var(--gray-color);
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    cursor: pointer;
+}
+
+.forgot-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.forgot-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Checkbox группа */
+.checkbox-group {
+    margin-bottom: 20px;
+}
+
+.checkbox-group .checkbox-label {
+    align-items: flex-start;
     line-height: 1.4;
 }
 
-.checkbox-group.large {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background: var(--gray-light);
-    border-radius: var(--border-radius);
+.checkbox-group .checkbox-label input {
+    margin-top: 3px;
 }
 
+.checkbox-group a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.checkbox-group a:hover {
+    text-decoration: underline;
+}
+
+/* Кнопки */
+.btn {
+    width: 100%;
+    padding: 14px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: white;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Разделитель */
 .divider {
     display: flex;
     align-items: center;
-    margin: 1.5rem 0;
+    margin: 20px 0;
 }
 
 .divider::before,
@@ -164,35 +499,44 @@
 }
 
 .divider span {
-    padding: 0 1rem;
+    padding: 0 15px;
     color: var(--gray-color);
     font-size: 0.9rem;
 }
 
-.auth-footer {
-    padding: 1.5rem 2rem;
-    text-align: center;
-    border-top: 1px solid var(--gray-light);
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .auth-info {
+        display: none;
+    }
+    
+    .auth-forms {
+        padding: 40px 30px;
+    }
 }
 
-.auth-footer a {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-/* Анимация загрузки */
-.loading {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid var(--gray-light);
-    border-top-color: var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 10px;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
+@media (max-width: 480px) {
+    .auth-wrapper {
+        padding: 10px;
+    }
+    
+    .auth-forms {
+        padding: 30px 20px;
+    }
+    
+    .forms-wrapper {
+        max-width: 100%;
+    }
+    
+    .form-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .tabs {
+        grid-template-columns: 1fr;
+    }
 }
