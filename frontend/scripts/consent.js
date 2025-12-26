@@ -83,7 +83,7 @@ async function handleConsent(e) {
         
         // Перенаправляем на страницу загрузки документа
         setTimeout(() => {
-            window.location.href = 'upload.html';
+            window.location.href = 'result.html';
         }, 1500);
         
     } catch (error) {

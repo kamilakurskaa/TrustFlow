@@ -46,7 +46,7 @@ def calculate_mock_score(user_data: dict) -> dict:
         "factors": {
             "payment_history": random.choice(["excellent", "good", "fair", "poor"]),
             "credit_utilization": random.randint(10, 80),
-            "credit_age": random.randint(1, 20)
+            "credit_age": random.randint(1, 4)
         }
     }
 
@@ -96,8 +96,28 @@ def get_credit_score(
         CreditReport.user_id == current_user.id
     ).order_by(CreditReport.created_at.desc()).first()
 
-    if not report:
-        raise HTTPException(status_code=404, detail="Кредитный отчет не найден")
+    score_data = calculate_mock_score({})
+
+    report_data = {
+        "user_id": current_user.id,
+        "score": score_data["score"],
+        "category": score_data["category"],
+        "calculated_at": datetime.utcnow().isoformat(),
+        "factors": score_data["factors"],
+        "method": "auto_generated"
+    }
+
+    report = CreditReport(
+        user_id=current_user.id,
+        score=score_data["score"],
+        score_category=score_data["category"],
+        reputation_score=score_data["reputation_score"],
+        report_data=json.dumps(report_data)
+    )
+
+    db.add(report)
+    db.commit()
+    db.refresh(report)
 
     return report
 

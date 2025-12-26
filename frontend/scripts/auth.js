@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+console.log('Auth script loaded');
+
 function checkAuthStatus() {
     const token = localStorage.getItem('token');
     if (token && window.location.pathname.includes('auth.html')) {
@@ -57,8 +59,15 @@ function switchTab(tabName) {
 }
 
 async function handleLogin(e) {
+    console.log('Handle login called');
+    console.log('Event type:', e.type);
+
     e.preventDefault();
-    
+    console.log('Default prevented');
+    e.stopPropagation();
+    console.log('Propagation stopped');
+
+    console.log('Login started');
     const email = document.getElementById('loginEmail')?.value;
     const password = document.getElementById('loginPassword')?.value;
     const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -121,6 +130,23 @@ async function handleLogin(e) {
         }
     }
 }
+
+async function handleLoginSubmit() {
+    const email = document.getElementById('loginEmail')?.value;
+    const password = document.getElementById('loginPassword')?.value;
+
+    if (!email || !password) {
+        showError('Заполните все поля');
+        return;
+    }
+
+    // Вызываем существующую логику
+    const fakeEvent = { preventDefault: () => {}, target: document.getElementById('loginForm') };
+    await handleLogin(fakeEvent);
+}
+
+// Сделаем функцию глобальной
+window.handleLoginSubmit = handleLoginSubmit;
 
 async function handleRegister(e) {
     e.preventDefault();

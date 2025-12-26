@@ -92,47 +92,85 @@ async function initResultPage() {
     if (!checkPageAuth()) return;
     
     try {
-        // Показываем индикатор загрузки
         showLoading(true);
-        
-        const token = localStorage.getItem('token');
-        
+
+        console.log('🔍 Loading result page...');
+
         // 1. Получаем данные пользователя
-        const userResponse = await fetch('http://localhost:8000/api/users/me', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (!userResponse.ok) {
-            throw new Error('Ошибка загрузки данных пользователя');
+        const user = await TrustFlowAPI.getCurrentUser();
+        if (!user) throw new Error('Не удалось загрузить данные пользователя');
+
+        console.log('✅ User data loaded:', user.email);
+
+        // 2. ПОЛУЧАЕМ ИЛИ СОЗДАЕМ кредитный отчет
+        let creditData = await TrustFlowAPI.getOrCreateCreditScore();
+
+        if (!creditData) {
+            // Если все еще нет данных
+            console.log('❌ No credit data available');
+            showNoReportUI(user);
+            return;
         }
-        
-        const user = await userResponse.json();
-        
-        // 2. Получаем кредитный рейтинг
-        const creditResponse = await fetch('http://localhost:8000/api/credit/score', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        let creditData = null;
-        if (creditResponse.ok) {
-            creditData = await creditResponse.json();
-        }
-        
+
+        console.log('✅ Credit data loaded:', creditData);
+
         // 3. Обновляем интерфейс
         updateResultPageUI(user, creditData);
-        
-        // 4. Загружаем историю если есть
-        await loadCreditHistory();
-        
+
     } catch (error) {
-        console.error('Error loading result page:', error);
-        showError('Ошибка загрузки данных. Пожалуйста, попробуйте позже.');
+        console.error('❌ Error loading result page:', error);
+        showError(`Ошибка: ${error.message}`);
     } finally {
         showLoading(false);
+    }
+}
+
+function createMockCreditData() {
+    const score = Math.floor(Math.random() * (750 - 500) + 500);
+
+    let category;
+    if (score >= 720) category = "excellent";
+    else if (score >= 680) category = "good";
+    else if (score >= 620) category = "fair";
+    else if (score >= 580) category = "poor";
+    else category = "bad";
+
+    return {
+        "score": score,
+        "score_category": category,
+        "reputation_score": score / 850,
+        "report_data": JSON.stringify({
+            "factors": {
+                "payment_history": 85,
+                "credit_utilization": Math.floor(Math.random() * 60) + 10,
+                "credit_age": Math.floor(Math.random() * 15) + 1
+            }
+        })
+    };
+}
+
+function showMockResult() {
+    // Показываем демо-результаты даже при ошибке
+    const mockData = {
+        "score": 750,
+        "score_category": "good",
+        "message": "Демонстрационные данные"
+    };
+
+    // Обновляем UI с демо-данными
+    const mainScore = document.getElementById('mainScore');
+    const scoreDescription = document.getElementById('scoreDescription');
+
+    if (mainScore) mainScore.textContent = mockData.score;
+    if (scoreDescription) {
+        const descriptions = {
+            'excellent': 'Отличный кредитный рейтинг',
+            'good': 'Хороший кредитный рейтинг',
+            'fair': 'Средний кредитный рейтинг',
+            'poor': 'Низкий кредитный рейтинг',
+            'bad': 'Очень низкий кредитный рейтинг'
+        };
+        scoreDescription.textContent = descriptions[mockData.score_category] || 'Рейтинг рассчитан';
     }
 }
 

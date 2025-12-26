@@ -62,11 +62,24 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
     access_token = create_access_token(
         data={"sub": str(user.id)}, expires_delta=access_token_expires
     )
-
+    user_dict = {
+        "id": user.id,
+        "email": user.email,
+        "full_name": user.full_name,
+        "phone": user.phone,
+        "wallet_address": user.wallet_address,
+        "is_active": user.is_active,
+        "is_verified": user.is_verified,
+        "reputation_score": user.reputation_score or 0.0,
+        "has_credit_history": user.has_credit_history,
+        "blockchain_user_id": user.blockchain_user_id,
+        "created_at": user.created_at,
+        "consent_data_processing": user.consent_data_processing
+    }
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "user": user
+        "user": user_dict
     }
 
 @router.get("/me", response_model=UserResponse)

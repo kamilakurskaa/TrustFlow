@@ -32,7 +32,7 @@ def get_user_with_rating(
         "has_wallet": bool(current_user.wallet_address)
     }
 
-@router.get("/profile", response_model=ProfileResponse)
+@router.get("/me/profile", response_model=ProfileResponse)
 def get_user_profile(
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db)
@@ -43,7 +43,7 @@ def get_user_profile(
     return profile
 
 
-@router.put("/profile", response_model=ProfileResponse)
+@router.put("/me/profile", response_model=ProfileResponse)
 def update_user_profile(
         profile_data: ProfileBase,
         current_user: User = Depends(get_current_user),

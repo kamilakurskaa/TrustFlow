@@ -12,6 +12,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from backend.app.database import engine, Base
 from backend.app.routes.auth import router as auth_router
 from backend.app.routes.credit import router as credit_router
+from backend.app.routes.users import router as users_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,10 +38,13 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8000",
         "http://127.0.0.1:8000",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
         "http://localhost:5500",
         "http://127.0.0.1:5500",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000"
+        "http://localhost:8080",
+        "http://127.0.0.1:8080",
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -49,6 +53,7 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/api/auth", tags=["Аутентификация"])
 app.include_router(credit_router, prefix="/api/credit", tags=["Кредитный скоринг"])
+app.include_router(users_router, prefix="/api/users", tags=["Пользователь"])
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(os.path.dirname(current_dir))
